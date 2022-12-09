@@ -20,27 +20,19 @@ fn traverse(c: &char,idx: usize,len: usize, s: &[char]) -> bool {
 }
 
 fn right(c: &char, s: &[char]) -> bool {
-    if s.len() > 0 {
-        !s.iter().skip(1).any(|tree| tree >= c)
-    } else {true}
+    !s.iter().skip(1).any(|tree| tree >= c)
 }
 
 fn left(c: &char, s: &[char]) -> bool {
-    if s.len() > 0 {
-        !s.iter().rev().any(|tree| tree >= c)
-    } else {true}
+    !s.iter().rev().any(|tree| tree >= c)
 }
 
 fn up(c: &char,len: usize, s: &[char]) -> bool {
-    if s.len() >= len {
-        !s.iter().rev().step_by(len).skip(1).any(|tree| tree >= c)
-    } else {true}
+    !s.iter().rev().step_by(len).skip(1).any(|tree| tree >= c)
 }
 
 fn down(c: &char,len: usize, s: &[char]) -> bool {
-    if s.len() >= len {
-        !s.iter().step_by(len).skip(1).any(|tree| tree >= c)
-    } else {true}
+    !s.iter().step_by(len).skip(1).any(|tree| tree >= c)
 }
 
 
