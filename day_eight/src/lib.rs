@@ -60,39 +60,31 @@ fn traverse2(c: &char,idx: usize,len: usize, s: &[char]) -> usize {
 }
 
 fn right2(c: &char, s: &[char]) -> usize {
-    if s.len() > 0 {
-        let c = s.iter().skip(1).take_while(|tree| tree < &c).count();
-        if s.iter().skip(1).skip(c).next().is_none() {
-            c
-        } else {c+1}
-    } else {0}
+    let c = s.iter().skip(1).take_while(|tree| tree < &c).count();
+    if s.iter().skip(1).skip(c).next().is_none() {
+        c
+    } else {c+1}
 }
 
 fn left2(c: &char, s: &[char]) -> usize {
-    if s.len() > 0 {
-        let c = s.iter().rev().take_while(|tree| tree < &c).count();
-        if s.iter().rev().skip(c).next().is_none() {
-            c
-        } else {c+1}
-    } else {0}
+    let c = s.iter().rev().take_while(|tree| tree < &c).count();
+    if s.iter().rev().skip(c).next().is_none() {
+        c
+    } else {c+1}
 }
 
 fn up2(c: &char,len: usize, s: &[char]) -> usize {
-    if s.len() > len {
-        let c = s.iter().rev().step_by(len).skip(1).take_while(|tree| tree < &c).count();
-        if s.iter().rev().step_by(len).skip(1).skip(c).next().is_none() {
-            c
-        } else {c+1}
-    } else {0}
+    let c = s.iter().rev().step_by(len).skip(1).take_while(|tree| tree < &c).count();
+    if s.iter().rev().step_by(len).skip(1).skip(c).next().is_none() {
+        c
+    } else {c+1}
 }
 
 fn down2(c: &char,len: usize, s: &[char]) -> usize {
-    if s.len() > len {
-        let c = s.iter().step_by(len).skip(1).take_while(|tree| tree < &c).count();
-        if  s.iter().step_by(len).skip(1).skip(c).next().is_none() {
-            c
-        } else {c+1}
-    } else {0}
+    let c = s.iter().step_by(len).skip(1).take_while(|tree| tree < &c).count();
+    if  s.iter().step_by(len).skip(1).skip(c).next().is_none() {
+        c
+    } else {c+1}
 }
 
 #[cfg(test)]
