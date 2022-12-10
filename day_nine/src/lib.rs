@@ -22,34 +22,12 @@ fn parse_step(input: &str) -> IResult<&str,Step> {
 
     Ok((i,step))
 }
+
 fn parse_steps(input: &str) -> IResult<&str,Vec<Step>> {
     separated_list1(line_ending, parse_step)(input)
 }
 
-fn next_follow((current_x,current_y): (i32,i32), (next_head_x,next_head_y): (i32,i32)) -> (i32,i32) {
-    let x_diff = current_x - next_head_x;
-    let y_diff = current_y - next_head_y;
-    if x_diff.abs() < 2 && y_diff.abs() < 2 {
-        return (current_x,current_y)
-    }
-    if x_diff.abs() > y_diff.abs() {
-        let new_x = next_head_x + x_diff.signum();
-        // Diagonal case
-        if y_diff.abs() == 1 {
-            return (new_x,next_head_y);
-        }
-        return (new_x,current_y)
-    } else {
-        let new_y = next_head_y + y_diff.signum();
-        // Diagonal case
-        if x_diff.abs() == 1 {
-            return (next_head_x,new_y);
-        }
-        return (current_x,new_y)
-    }
-}
-
-fn process_part_one(input: &str) -> usize {
+pub fn process_part_one(input: &str) -> usize {
 
     let (_,steps) = parse_steps(input).expect("faild to parse input");
     let mut visited = HashSet::new();
@@ -84,11 +62,11 @@ fn process_part_one(input: &str) -> usize {
     visited.len()
 }
 
-fn process_part_two(input: &str) -> usize {
+pub fn process_part_two(input: &str) -> usize {
 
     let (_,steps) = parse_steps(input).expect("faild to parse input");
     let mut visited = HashSet::new();
-    let mut rope = [(12,6);10];
+    let mut rope = [(1001,1000);10];
     for step in steps {
         match step {
             Step::Left(s) => for _ in 0..s {
@@ -117,11 +95,27 @@ fn process_part_two(input: &str) -> usize {
                 for i in 1..10usize {
                     rope[i] = next_follow(rope[i],rope[i-1]);   
                 }
-                                visited.insert(rope[9]);
+                visited.insert(rope[9]);
             },
         }
     }
     visited.len()
+}
+
+
+fn next_follow((current_x,current_y): (i32,i32), (next_head_x,next_head_y): (i32,i32)) -> (i32,i32) {
+    let x_diff = current_x - next_head_x;
+    let y_diff = current_y - next_head_y;
+    if x_diff.abs() < 2 && y_diff.abs() < 2 {
+        return (current_x,current_y)
+    }
+    if y_diff.abs() < 2 {
+        (next_head_x+x_diff.signum(),next_head_y)
+    } else if x_diff.abs() < 2 {
+        (next_head_x,next_head_y+y_diff.signum())
+    } else {
+        (next_head_x+x_diff.signum(),next_head_y+y_diff.signum())
+    }
 }
 
 #[cfg(test)]
@@ -144,6 +138,7 @@ mod tests {
         assert_eq!(next_follow((0,0),(2,1)),((1,1)));
         assert_eq!(next_follow((2,1),(0,0)),((1,0)));
         assert_eq!(next_follow((1,2),(0,0)),((0,1)));
+        assert_eq!(next_follow((0,0),(2,2)),((1,1)));
     }
 
     #[test]
