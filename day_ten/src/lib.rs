@@ -38,12 +38,12 @@ pub fn procces_part_one(input: &str) -> i32 {
 
 pub fn procces_part_two(input: &str) -> String {
     let (_,instructions) = parse_instruction(input).unwrap();
-    let mut x = 1; 
     let crt_flattend = instructions.into_iter()
-        .flat_map(|i| match i {
-            Instruction::NoOp => iter::repeat(x).take(1),
-            Instruction::AddX(val) => {x+=val; iter::repeat(x-val).take(2)},
+        .scan(1,|x,i| match i {
+            Instruction::NoOp => Some(iter::repeat(*x).take(1)),
+            Instruction::AddX(val) => {*x+=val; Some(iter::repeat(*x-val).take(2))},
         })
+        .flatten()
         .enumerate()
         .fold(['.';40*6],|mut crt, (cycle, x)| {
             let sprite = x+(40*(cycle as i32/40));

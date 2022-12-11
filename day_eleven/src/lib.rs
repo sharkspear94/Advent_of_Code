@@ -74,21 +74,23 @@ pub fn process_one(input: &str) -> usize {
             .for_each(|(i,buf)| monkeys[i].items.extend(buf.drain(..)))
     }
     monkeys.sort_by(|a,b| b.inspected.cmp(&a.inspected));
-    monkeys.into_iter()
+    
+    monkeys.iter()
         .take(2)
-        .map(|m|m.inspected)
+        .map( |m| m.inspected )
         .product()
+
 }
 
 pub fn process_two(input: &str) -> usize {
     let (_,mut monkeys) = parse_monkeys(input).unwrap();
     let mut buffers = vec![vec![]; monkeys.len()];
-    let max_rem: usize = monkeys.iter().map(|m|m.divident).product();
+    let common_div: usize = monkeys.iter().map(|m|m.divident).product();
     for _ in 0..10000 {
         for (i,monkey) in monkeys.iter_mut().enumerate() {
             monkey.items.extend(buffers[i].drain(..));
             monkey.inspected += monkey.items.drain(..)
-                .map(|worry| (monkey.operation)(worry) % max_rem)
+                .map(|worry| (monkey.operation)(worry) % common_div)
                 .map(|new_worry| buffers[(monkey.test_worry)(new_worry)].push(new_worry))
                 .count();
         }
