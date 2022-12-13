@@ -62,24 +62,28 @@ pub fn proccess_one(input: &str) -> usize {
 }
 pub fn proccess_two(input: &str) -> usize {
     let (_, packets) = parse_packets(input).unwrap();
-    let mut packets = packets.iter().flat_map(|(l, r)| [l, r]).collect::<Vec<_>>();
+
     let diveder_packet1 = parse_packet("[[2]]").unwrap().1;
     let diveder_packet2 = parse_packet("[[6]]").unwrap().1;
-    packets.push(&diveder_packet1);
-    packets.push(&diveder_packet2);
+    let mut packets = packets
+        .iter()
+        .flat_map(|(l, r)| [l, r])
+        .chain([&diveder_packet1, &diveder_packet2])
+        .collect::<Vec<_>>();
     packets.sort();
 
-    packets
-        .iter()
-        .enumerate()
-        .filter(|(_, p)| **p == &diveder_packet1 || **p == &diveder_packet2)
-        .map(|(i, _)| i + 1)
-        .product()
+    (packets.binary_search(&&diveder_packet1).unwrap() + 1)
+        * (packets.binary_search(&&diveder_packet2).unwrap() + 1)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn part_asd() {
+        assert!([1, 2, 3, 4][..].lt(&[5][..]))
+    }
 
     #[test]
     fn part_one() {
