@@ -82,18 +82,22 @@ pub fn proccess_two(input: &str) -> usize {
 
 #[cfg(test)]
 mod tests {
+    use std::time::Instant;
+
     use super::*;
 
     #[test]
     fn part_one() {
+        let now = Instant::now();
         let input = std::fs::read_to_string("./input.txt").unwrap();
-        println!("Result part one: {}",proccess_one(&input))
+        println!("Result part one: {}, time: {}",proccess_one(&input), now.elapsed().as_millis());
     }
 
     #[test]
     fn part_two() {
+        let now = Instant::now();
         let input = std::fs::read_to_string("./input.txt").unwrap();
-        println!("Result part two: {}",proccess_two(&input))
+        println!("Result part two: {}, time: {}",proccess_two(&input), now.elapsed().as_millis())
     }
 
     #[test]
