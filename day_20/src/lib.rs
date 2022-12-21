@@ -37,8 +37,6 @@ pub fn process2(input: &str) -> i64 {
             let number = res.remove(index);
             res.insert(new_index as usize, number);
         });
-        res.iter().for_each(|a| print!("{},", a.1));
-        println!("")
     }
     let pos = res.iter().position(|a| a.1 == 0).unwrap();
     let a = res.iter().cycle().skip(pos).nth(1000).unwrap().1;
