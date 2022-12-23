@@ -64,8 +64,7 @@ pub fn process1(input: &str) -> i32 {
         .collect::<HashSet<_>>();
     let mut dir_iter = Dirs::iter().cycle();
     for _ in 1..=10 {
-        let changes = set
-            .iter()
+        set.iter()
             .filter_map(|&coord| move_to(coord, &set, dir_iter.clone()))
             .fold(HashMap::new(), |mut map, (old, new)| {
                 map.entry(new)
@@ -77,17 +76,10 @@ pub fn process1(input: &str) -> i32 {
             })
             .into_iter()
             .filter(|&(_, (_, count))| count == 1)
-            .map(|(new, (old, _))| (old, new))
-            .collect::<Vec<_>>();
-        // println!("canges: {changes:?}");
-        changes.into_iter().for_each(|(old, new)| {
-            if !set.remove(&old) {
-                println!("and not present removed");
-            }
-            if !set.insert(new) {
-                println!("insert override at :{:?} and deleted: {old:?}", new);
-            }
-        });
+            .for_each(|(new, (old, _))| {
+                set.remove(&old);
+                set.insert(new);
+            });
         dir_iter.advance_by(1).unwrap();
     }
     let (min_y, max_y) = set
@@ -102,9 +94,6 @@ pub fn process1(input: &str) -> i32 {
         .minmax_by(|a, b| a.cmp(&b))
         .into_option()
         .unwrap();
-    println!("min x: {min_x}, max x: {max_x}");
-    println!("y: {}", max_y.abs_diff(min_y));
-    println!("x: {}", max_x.abs_diff(min_x));
     (max_y + 1 - min_y) * (max_x + 1 - min_x) - set.len() as i32
 }
 
@@ -118,9 +107,9 @@ pub fn process2(input: &str) -> i32 {
                 .map(move |(x, _)| (x as i32, y as i32))
         })
         .collect::<HashSet<_>>();
-    // println!("set len: {}", set.len());
+
     let mut dir_iter = Dirs::iter().cycle();
-    // println!("set before: {set:?}");
+
     for round in 1.. {
         let changes = set
             .iter()
@@ -132,28 +121,21 @@ pub fn process2(input: &str) -> i32 {
                     })
                     .or_insert((old, 1));
                 map
-            })
-            .into_iter()
-            .filter(|&(_, (_, count))| count == 1)
-            .map(|(new, (old, _))| (old, new))
-            // .inspect(|coords| println!("{coords:?}"))
-            .collect::<Vec<_>>();
-        // println!("canges: {changes:?}");
+            });
+
         if changes.len() == 0 {
             return round;
         }
-        changes.into_iter().for_each(|(old, new)| {
-            if !set.remove(&old) {
-                println!("and not present removed");
-            }
-            if !set.insert(new) {
-                println!("insert override at :{:?} and deleted: {old:?}", new);
-            }
-        });
-        // println!("set after round {round}: {set:?}");
+        changes
+            .into_iter()
+            .filter(|&(_, (_, count))| count == 1)
+            .for_each(|(new, (old, _))| {
+                set.remove(&old);
+                set.insert(new);
+            });
         dir_iter.advance_by(1).unwrap();
     }
-    panic!()
+    unreachable!()
 }
 
 #[cfg(test)]
